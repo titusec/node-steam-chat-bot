@@ -1,0 +1,338 @@
+var ChatBot = require('steam-chat-bot').ChatBot;
+
+// This will log in a steam user with the specified username and password 
+// You can also pass in a steam guard code from an email
+var myBot = new ChatBot('tittysec', 'lilcub2000', { guardCode: 'XXXXX', autoReconnect: true });
+
+// Set up the triggers to control the bot
+myBot.addTriggers([
+
+	
+	{
+		name: 'EatenByAGrue',
+		type: 'BotReplyTrigger',
+		options: {
+			matches: ['grue', 'eaten by a grue', 'inb4 eaten by a grue'],
+			exact: false,
+			responses: ['You have been eaten by a grue.']
+			delay: 500,
+		}
+	},
+	(
+		name: 'PayRespects',
+		type: 'BotReplyTrigger',
+		options: {
+			matches: ['press f to pay respects', 'Press "F" to pay respects.', 'rest in rip.', 'rip', 'rip in piece.'],
+			exact: false,
+			responses: ['F']
+		}
+	},
+	// Command to acquire the dank memes.
+	{
+		name: 'DankMemeEXE',
+		type: 'BotReplyTrigger',
+		options: {
+			matches: ['dank memes pls', 'dank memes please.', 'memes pls.']
+			exact: false
+			responses: ['niceme.me']
+		}
+	},
+	// Replies the current DM
+	{	
+		name: 'DungeonMasters',
+		type: 'BotReplyTrigger',
+		options: {
+			matches: ['Who da dms?', 'Who is the dungeon master?', 'Who is the Dungeon Master?']
+			exact: false
+			responses: [Currently the Dungeon Master is Doctor Professor. That canadian bastard.]
+		}
+	},
+	// Tells who they are.
+	{
+		name: 'WhoAmI'
+		type: 'BotReplyTrigger'
+		options: {
+			matches: ['Who made you, you piece of shit?']
+			exact: false
+			responses: ['TituSec did, he had to use his CS:GO alternate for steam security reasons.']
+		}
+	},
+	{ 
+		name: 'MuteCommand', 
+		type: 'BotCommandTrigger', 
+		options: { 
+			matches: ['!mute', '!pause'], 
+			exact: true,
+			callback: function(bot) { bot.mute(); }
+		} 
+	},
+	// Commands to stop/unstop the bot from saying anything in a chatroom
+	{ 
+		name: 'UnmuteCommand', 
+		type: 'BotCommandTrigger', 
+		options: { 
+			matches: ['!unmute', '!unpause'], 
+			exact: true,
+			callback: function(bot) { bot.unmute(); }
+		} 
+	},
+
+	// Command to join Bad Rats whenever it's mentioned	
+	{ 
+		name: 'BadRatsCommand', 
+		type: 'BotCommandTrigger', 
+		options: { 
+			matches: ['bad rats'], 
+			exact: false,
+			callback: function(bot) { bot.joinGame(34900); }
+		} 
+	},
+
+	// Automatically accept invites from any user to the specified group chat
+	{ 
+		name: 'AcceptChatInvite', 
+		type: 'AcceptChatInviteTrigger', 
+		options: { 
+			chatrooms: { 'GroupSteamId': 'Welcome message' }, 
+			autoJoinAfterDisconnect: true
+		} 
+	},
+
+	// Automatically accept all friend requests
+	{ name: 'AcceptFriendRequest', type: 'AcceptFriendRequestTrigger' },
+
+	// Reply triggers - respond to a chat/private message if it matches a set of inputs 
+	// (case-insensitive exact or substring match), and choose randomly from a set of responses
+	{ 
+		name: 'EmptyQuoteReply', 
+		type: 'ChatReplyTrigger', 
+		options: { 
+			matches: ['^'], 
+			responses: ['^'], 
+			exact: true, 
+			delay: 1000, 
+			probability: 0.2, 
+			timeout: 10*1000 
+		} 
+	},
+	{ 
+		name: 'HeartReply', 
+		type: 'ChatReplyTrigger', 
+		options: { 
+			matches: ['<3'], 
+			responses: ['</3', '<3'], 
+			exact: true, 
+			delay: 500, 
+			probability: 0.5, 
+			timeout: 60*60*1000 } },
+	{ 
+		name: 'SteveHoltReply', 
+		type: 'ChatReplyTrigger', 
+		options: { 
+			matches: ['steve holt', 'steve holt!'], 
+			responses: ['\\o/'], 
+			exact: false, 
+			delay: 500, 
+			timeout: 10*1000 
+		} 
+	},
+
+	// Reply triggers that will only respond to a particular user
+	{ 
+		name: 'SingleUserReply', 
+		type: 'ChatReplyTrigger', 
+		options: { 
+			matches: ['hi bot'], 
+			responses: ['hi boss!'], 
+			exact: true, 
+			users: ['76561197961244239'] 
+		} 
+	},
+
+	// Sample regex trigger, "mate" will be responded to with "mmaaaate", 
+	// "mmaaaate" will be responded to with "mmmaaaaaaate", etc
+	{ 
+		name: 'MateEscalation', 
+		type: 'RegexReplaceTrigger',
+		options: { match: /^(m+?)(a+?)te(s??)$/, response: '{0}m{1}aaate{2}', delay: 500} 
+	},
+
+	// Butt bot, replace a random word from someone's message with "butt" about once every 50 messages
+	//{ 
+	//	name: 'ButtBot', 
+	//	type: 'ButtBotTrigger', 
+	//	options: { replacement: 'butt', probability: 0.02, delay: 1000 } 
+	//},
+	// This is the part of the code that randomly will insert stupid chat emoji things and it pisses me off.
+	//
+	//
+	// Chat reply that doesn't need a particular message to trigger, just a random reply about 
+	// once every 100 messages (and no more than once an hour)
+	// { 
+	//	name: 'RandomReply', 
+	//	type: 'ChatReplyTrigger', 
+	//	options: { 
+	//		matches: [], 
+	//		responses: ['ლ(ಠ益ಠლ)', 'щ(ﾟДﾟщ)', 'omg', '(ﾉಥ益ಥ)ﾉ', '¯\\_(ツ)_/¯'], 
+	//		delay: 500, 
+	//		probability: 0.01, 
+	//		timeout: 60*60*1000 
+	//	} 
+	// },
+
+	// Cleverbot reply that only happens when the word "cleverbot" is mentioned
+	{ 
+		name: 'DirectCleverbotReply', 
+		type: 'CleverbotTrigger', 
+		options: { keywords: ['cleverbot'] } 
+	},
+
+	// Random cleverbot reply that triggers randomly about once every 100 messages
+	{ 
+		name: 'RandomCleverbotReply', 
+		type: 'CleverbotTrigger', 
+		options: { probability: 0.01, timeout: 30*60*1000 } 
+	},
+
+	// Say something when a user joins chat
+	{ 
+		name: 'SteveHoltEnter', 
+		type: 'MessageOnJoinTrigger', 
+		options: { 
+			user: '76561197961244239', 
+			message: "STEVE HOLT! \\o/", 
+			probability: 0.5, 
+			delay: 1000, 
+			timeout: 24*60*60*1000 
+		} 
+	},
+
+	// Query Wolfram Alpha when a message starts with !wolfram
+	{ 
+		name: 'WolframReply', 
+		type: 'WolframAlphaTrigger', 
+		options: { command: '!wolfram', appId: '2A86J6-Q8WTP7UYWA' } 
+	},
+
+	// Post all links from chat to tumblr, and also post things on command
+	{ 
+		name: 'TumblrTrigger', 
+		type: 'TumblrTrigger', 
+		options: { 
+			autoPost: true, 
+			autoPostContext: false, 
+			blogName: 'XXX', 
+			consumerKey: 'XXX', 
+			consumerSecret: 'XXX', 
+			token: 'XXX', 
+			tokenSecret: 'XXX' 
+		}  
+	},
+
+	// Search YouTube and respond with the top result whenever someone types !yt <query>, rickroll about 1 every 100 times
+	{ 
+		name: 'Youtube', 
+		type: 'YoutubeTrigger', 
+		options: { command: '!yt', rickrollChance: 0.01 } 
+	},
+
+	// Search Google and respond with the top result whenever someone types !g <query>
+	{
+		name: 'Google',
+		type: 'GoogleTrigger',
+		options: { command: '!g' }
+	},
+
+	// Search Google Images and respond with the top result whenever someone types !gi <query>
+	{
+		name: 'GoogleImages',
+		type: 'GoogleImagesTrigger',
+		options: { command: '!gi' }
+	},
+	// From this point forward...D&D commands. EXPERIMENTAL
+	// Rolls a D20.
+	{
+		name: 'roll20',
+		type: 'BotCommandTrigger',
+		options: { command: '!1d20', responses: ['You rolled a...1. CRITICAL FAILURE!', 'You rolled a...2.', 'You rolled a...3.', 'You rolled a...4.', 'You rolled a...5.', 'You rolled a...6.', 'You rolled a...7.', 'You rolled an...8.', 'You rolled a...9.', 'You rolled a...10.', 'You rolled an...11.', 'You rolled a...12.', 'You rolled a...13.', 'You rolled a...14.', 'You rolled a...15.', 'You rolled a...16.', 'You rolled a...17.', 'You rolled an...18.', 'You rolled a...19.', 'You rolled a...20. Flawless!'], probability: 0.05
+		}	
+	},
+	// Rolls a six die.
+	{
+		name: 'roll6',
+		type: 'BotCommandTrigger',
+		options: { command: '!1d6', responses: ['You rolled a...1. :(', 'You rolled a...2.', 'You rolled a...3.', 'You rolled a...4.', 'You rolled a...5.', 'You rolled a...6. Noice!'], probability: 0.16
+		}
+	},
+	// Rolls a 4 die.
+	{
+	name: 'roll4',
+		type: 'BotCommandTrigger',
+		options: { command: '!1d4', responses: ['You rolled a...1. :(', 'You rolled a...2.', 'You rolled a...3.', 'You rolled a...4. Niiice!'], probability: 0.25
+		}
+	},
+	// Rolls a 10 die.
+	{
+	name: 'roll10',
+		type: 'BotCommandTrigger',
+		options: { command: '!1d10', responses: ['You rolled a...1. :(', 'You rolled a...2.', 'You rolled a...3.', 'You rolled a...4.', 'You rolled a...5.', 'You rolled a...6.', 'You rolled a...7.', 'You rolled an...8', 'You rolled a...9.', 'You rolled a...10. You been practicing that roll?'], probability: 0.1
+		}
+	},
+	// Rolls a 12 die.
+	{
+	name: 'roll12',
+		type: 'BotCommandTrigger',
+		options: { command: '!1d12', responses: ['You rolled a...1. :(', 'You rolled a...2.', 'You rolled a...3.', 'You rolled a...4.', 'You rolled a...5.', 'You rolled a...6.', 'You rolled a...7.', 'You rolled an...8', 'You rolled a...9.', 'You rolled a...10.', 'You rolled a...11.', 'You rolled a...12. Nice!'], probability: 0.12
+		}
+	},
+	// Roll an 8 die.
+	{
+		name: 'roll8',
+		type: 'BotCommandTrigger',
+		options: { command: '!1d8', responses: ['You rolled a...1. :(', 'You rolled a...2.', 'You rolled a...3.', 'You rolled a...4.', 'You rolled a...5.', 'You rolled a...6.', 'You rolled a...7.', 'You rolled an...8. Nice!'], probability: 0.125
+		}
+	},
+	{
+		name: 'bardstatchart',
+		type: 'BotCommandTrigger',
+		options:
+		{
+			command: '!bardstats',
+			responses: 'You can find an easy to use bard skill chart here: http://http://www.d20srd.org/srd/classes/bard.htm',
+		}
+	},
+	{
+		name: 'thebasics',
+		type: 'BotCommandTrigger',
+		options:
+		{
+			command: ['!basic', '!basics', '!help', '!helpmepls','!dndhelp'],
+			responses: 'You can find the basics of D&D here: http://www.d20srd.org/indexes/basicsRacesDescription.htm'
+		}
+	},
+	{
+		name: 'listofraces',
+		type: 'BotCommandTrigger',
+		options:
+		{
+				command: ['!race', '!races', '!jacobisracist']
+				responses: 'You can find the list of primary races here : http://dnd.wizards.com/dungeons-and-dragons/what-is-dd/races'
+		}
+	},
+	{
+		name: 'coinflip',
+		type: 'BotCommandTrigger',
+		options:
+		{
+			command: ['!filp', '!coinflip', '!5050', '!1d2'],
+			responses: ['You got...tails (or a one)!', 'You got...heads! (or a zero/two)'],
+			probability: .5
+		}
+	}
+])
+myBot.connect();
+
+// Trigger details can be retrieved and reloaded so that external configuration can be supported
+var details = myBot.getTriggerDetails();
+myBot.clearTriggers();
+myBot.addTriggers(details);
