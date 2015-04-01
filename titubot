@@ -2,7 +2,7 @@ var ChatBot = require('steam-chat-bot').ChatBot;
 
 // This will log in a steam user with the specified username and password 
 // You can also pass in a steam guard code from an email
-var myBot = new ChatBot('tittysec', 'lilcub2000', { guardCode: 'XXXXX', autoReconnect: true });
+var myBot = new ChatBot('username', 'password', { guardCode: 'XXXXX', autoReconnect: true });
 
 // Set up the triggers to control the bot
 myBot.addTriggers([
