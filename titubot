@@ -1,5 +1,5 @@
 var ChatBot = require('steam-chat-bot').ChatBot;
-
+// This is just an edit of the example.js to make funtions for Dungeons and Dragons. It is essentially an addon, so I am treating it like so. All credit goes to Effreak and company.
 // This will log in a steam user with the specified username and password 
 // You can also pass in a steam guard code from an email
 var myBot = new ChatBot('username', 'password', { guardCode: 'XXXXX', autoReconnect: true });
